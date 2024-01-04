@@ -142,16 +142,9 @@ class FolderController extends Controller
             /** @var App\Models\User **/
             $user = Auth::user();
             $folder = $user->folders()->findOrFail($folder->id);
-
-            $folder = DB::transaction(function () use ($folder) {
-                if($folder) throw new \Exception('500');
                 $folder->tasks()->delete();
                 $folder->delete();
-                return $folder;
-            });
-
             $folder = Folder::first();
-
             return redirect()->route('tasks.index', [
                 'folder' => $folder->id
             ]);
@@ -159,4 +152,6 @@ class FolderController extends Controller
             Log::error('Error FolderController in delete: ' . $e->getMessage());
         }
     }
+
+    
 }
